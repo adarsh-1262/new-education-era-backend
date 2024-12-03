@@ -20,6 +20,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions))
+
 app.use(express.json()); // Middleware to parse JSON
 app.use(cookieParser())
 
