@@ -12,10 +12,14 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true
-}))
+
+const corsOptions = {
+    origin: process.env.CORS_ORIGIN, // Replace with your frontend URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+    credentials: true, // Allow sending cookies and headers
+};
+
+app.use(cors(corsOptions));
 app.use(express.json()); // Middleware to parse JSON
 app.use(cookieParser())
 
