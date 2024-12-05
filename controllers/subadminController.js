@@ -1,42 +1,39 @@
-const User = require('../models/User');
+
+const Subadmin = require('../models/Subadmin');
 const generateToken = require('../utils/generateToken');
 
 // Signup user
-const signupUser = async (req, res) => {
+const signupSubadmin = async (req, res) => {
   const { 
+    name,
     username, 
     email, 
     password, 
     userType, 
     school, 
     Class, 
-    rollNo, 
     phone 
   } = req.body;
 
   // Input validation
-  if (!username || !email || !password || !userType || !school || !Class || !rollNo || !phone) {
+  if (!name || !username || !email || !password || !userType || !school || !Class || !phone) {
     return res.status(400).json({ success: false, message: 'All fields are required!' });
   }
 
   try {
     // Check if user already exists
-    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    const existingUser = await Subadmin.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
       return res.status(400).json({ success: false, message: 'User already exists!' });
     }
-    const existingclassOrRollno = await User.findOne({ $and: [{Class}, {rollNo}] });
-    if (existingclassOrRollno) {
-      return res.status(400).json({ success: false, message: 'User is already with this Roll no in this class' });
-    }
 
-    // Create new user
-    const user = await User.create({ username, email, password, userType, school, Class, rollNo, phone });
+    // Create new Admin
+    const subadmin = await Subadmin.create({ name, username, email, password, userType, school, Class, phone });
 
     res.status(201).json({
       success: true,
       message: 'Signup successful',
-      token: generateToken(user._id), // Generate and return token
+      token: generateToken(subadmin._id), // Generate and return token
     });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error. Please try again.' });
@@ -44,7 +41,7 @@ const signupUser = async (req, res) => {
 };
 
 // Login user
-const loginUser = async (req, res) => {
+const loginSubadmin = async (req, res) => {
   const { email, password } = req.body;
   // Input validation
   if (!email || !password) {
@@ -52,27 +49,26 @@ const loginUser = async (req, res) => {
   }
   try {
     // Check if user exists
-    const user = await User.findOne({ email });
-    if (!user) {
+    const subadmin = await Subadmin.findOne({ email });
+    if (!subadmin) {
       return res.status(404).json({ success: false, message: 'User not found!' });
     }
 
     // Verify password
-    const isMatch = await user.matchPassword(password); // Ensure `matchPassword` is implemented in the User model
+    const isMatch = await subadmin.matchPassword(password); // Ensure `matchPassword` is implemented in the User model
     if (!isMatch) {
       return res.status(400).json({ success: false, message: 'Invalid credentials!' });
     }
-    
     const options = {
       httpOnly: true,
       secure: true
-  }
+    }
     res
       .status(200)
-      .cookie("token", generateToken(user._id), options)
+      .cookie("token", generateToken(subadmin._id), options)
       .json({
       success: true,
-      role: user.userType,
+      role: subadmin.userType,
       message: 'Login successful',
     });
   } catch (error) {
@@ -80,7 +76,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-const logOutUser = async(req, res) => {
+const logOutSubadmin = async(req, res) => {
   const options = {
     httpOnly: true,
     secure: true
@@ -96,4 +92,4 @@ const logOutUser = async(req, res) => {
 
 }
 
-module.exports = { signupUser, loginUser, logOutUser };
+module.exports = { signupSubadmin, loginSubadmin, logOutSubadmin };

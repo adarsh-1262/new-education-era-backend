@@ -1,17 +1,17 @@
-const User = require('../models/User');
+const Parent = require('../models/Parent');
 const generateToken = require('../utils/generateToken');
 
 // Signup user
-const signupUser = async (req, res) => {
+const signupParent = async (req, res) => {
   const { 
     username, 
     email, 
     password, 
-    userType, 
+    userType,  
+    phone,
     school, 
     Class, 
-    rollNo, 
-    phone 
+    rollNo
   } = req.body;
 
   // Input validation
@@ -21,17 +21,17 @@ const signupUser = async (req, res) => {
 
   try {
     // Check if user already exists
-    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    const existingUser = await Parent.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
       return res.status(400).json({ success: false, message: 'User already exists!' });
     }
-    const existingclassOrRollno = await User.findOne({ $and: [{Class}, {rollNo}] });
+    const existingclassOrRollno = await Parent.findOne({ $and: [{Class}, {rollNo}] });
     if (existingclassOrRollno) {
       return res.status(400).json({ success: false, message: 'User is already with this Roll no in this class' });
     }
 
     // Create new user
-    const user = await User.create({ username, email, password, userType, school, Class, rollNo, phone });
+    const parent = await Parent.create({ username, email, password, userType, school, Class, rollNo, phone });
 
     res.status(201).json({
       success: true,
@@ -44,7 +44,7 @@ const signupUser = async (req, res) => {
 };
 
 // Login user
-const loginUser = async (req, res) => {
+const loginParent = async (req, res) => {
   const { email, password } = req.body;
   // Input validation
   if (!email || !password) {
@@ -52,13 +52,13 @@ const loginUser = async (req, res) => {
   }
   try {
     // Check if user exists
-    const user = await User.findOne({ email });
-    if (!user) {
+    const parent = await Parent.findOne({ email });
+    if (!parent) {
       return res.status(404).json({ success: false, message: 'User not found!' });
     }
 
     // Verify password
-    const isMatch = await user.matchPassword(password); // Ensure `matchPassword` is implemented in the User model
+    const isMatch = await parent.matchPassword(password); // Ensure `matchPassword` is implemented in the Parent model
     if (!isMatch) {
       return res.status(400).json({ success: false, message: 'Invalid credentials!' });
     }
@@ -69,10 +69,9 @@ const loginUser = async (req, res) => {
   }
     res
       .status(200)
-      .cookie("token", generateToken(user._id), options)
+      .cookie("token", generateToken(parent._id), options)
       .json({
       success: true,
-      role: user.userType,
       message: 'Login successful',
     });
   } catch (error) {
@@ -80,7 +79,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-const logOutUser = async(req, res) => {
+const logOutParent = async(req, res) => {
   const options = {
     httpOnly: true,
     secure: true
@@ -96,4 +95,4 @@ const logOutUser = async(req, res) => {
 
 }
 
-module.exports = { signupUser, loginUser, logOutUser };
+module.exports = { signupParent, loginParent, logOutParent };

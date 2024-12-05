@@ -2,6 +2,11 @@ const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
+const expertRoutes = require('./routes/expertRoutes');
+const tutorRoutes = require('./routes/tutorRoutes');
+const parentRoutes = require('./routes/parentRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const subadminRoutes = require('./routes/subadminRoutes');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
@@ -26,8 +31,12 @@ app.use(express.json()); // Middleware to parse JSON
 app.use(cookieParser())
 
 // Routes
-app.use('/api/auth', authRoutes);
-
+app.use('/api/student', authRoutes);
+app.use('/api/expert', expertRoutes);
+app.use('/api/tutor', tutorRoutes);
+app.use('/api/parent', parentRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/subadmin', subadminRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;

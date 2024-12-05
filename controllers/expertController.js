@@ -1,42 +1,36 @@
-const User = require('../models/User');
+const Expert = require('../models/Expert');
 const generateToken = require('../utils/generateToken');
 
 // Signup user
-const signupUser = async (req, res) => {
+const signupExpert = async (req, res) => {
   const { 
-    username, 
-    email, 
-    password, 
-    userType, 
-    school, 
-    Class, 
-    rollNo, 
-    phone 
+    username,
+    email,
+    password,
+    userType,
+    phone,
+    consultationField,
+    experienceYears,
   } = req.body;
 
   // Input validation
-  if (!username || !email || !password || !userType || !school || !Class || !rollNo || !phone) {
+  if (!username || !email || !password || !userType || !phone || !consultationField || !experienceYears) {
     return res.status(400).json({ success: false, message: 'All fields are required!' });
   }
 
   try {
     // Check if user already exists
-    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    const existingUser = await Expert.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
       return res.status(400).json({ success: false, message: 'User already exists!' });
     }
-    const existingclassOrRollno = await User.findOne({ $and: [{Class}, {rollNo}] });
-    if (existingclassOrRollno) {
-      return res.status(400).json({ success: false, message: 'User is already with this Roll no in this class' });
-    }
-
-    // Create new user
-    const user = await User.create({ username, email, password, userType, school, Class, rollNo, phone });
+    // Create new expert
+    const expert = await Expert.create({ username, email, password, userType, phone, consultationField, experienceYears });
 
     res.status(201).json({
       success: true,
       message: 'Signup successful',
-      token: generateToken(user._id), // Generate and return token
+      token: generateToken(expert._id), // Generate and return token
     });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error. Please try again.' });
@@ -44,21 +38,22 @@ const signupUser = async (req, res) => {
 };
 
 // Login user
-const loginUser = async (req, res) => {
+const loginExpert = async (req, res) => {
   const { email, password } = req.body;
   // Input validation
   if (!email || !password) {
     return res.status(400).json({ success: false, message: 'All fields are required!' });
   }
+
   try {
     // Check if user exists
-    const user = await User.findOne({ email });
-    if (!user) {
+    const expert = await Expert.findOne({ email });
+    if (!expert) {
       return res.status(404).json({ success: false, message: 'User not found!' });
     }
 
     // Verify password
-    const isMatch = await user.matchPassword(password); // Ensure `matchPassword` is implemented in the User model
+    const isMatch = await expert.matchPassword(password); // Ensure `matchPassword` is implemented in the User model
     if (!isMatch) {
       return res.status(400).json({ success: false, message: 'Invalid credentials!' });
     }
@@ -67,12 +62,13 @@ const loginUser = async (req, res) => {
       httpOnly: true,
       secure: true
   }
+
     res
       .status(200)
-      .cookie("token", generateToken(user._id), options)
+      .cookie("token", generateToken(expert._id), options)
       .json({
       success: true,
-      role: user.userType,
+      role: expert.userType,
       message: 'Login successful',
     });
   } catch (error) {
@@ -80,7 +76,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-const logOutUser = async(req, res) => {
+const logOutExpert = async(req, res) => {
   const options = {
     httpOnly: true,
     secure: true
@@ -96,4 +92,4 @@ const logOutUser = async(req, res) => {
 
 }
 
-module.exports = { signupUser, loginUser, logOutUser };
+module.exports = { signupExpert, loginExpert, logOutExpert };
