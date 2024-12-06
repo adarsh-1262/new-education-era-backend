@@ -1,5 +1,5 @@
 const express = require('express');
-const dotenv = require('dotenv');
+require('dotenv').config();
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const expertRoutes = require('./routes/expertRoutes');
@@ -12,8 +12,7 @@ const cookieParser = require('cookie-parser');
 const chatRoutes = require('./routes/chatRoutes');
 const errorHandler = require('./middlewares/errorHandler');
 
-// Load environment variables
-dotenv.config();
+
 
 // Connect to MongoDB
 connectDB();
