@@ -11,6 +11,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const chatRoutes = require('./routes/chatRoutes');
 const errorHandler = require('./middlewares/errorHandler');
+const enrolmentRoutes = require("./routes/enrolmentRoutes");
 
 
 
@@ -41,6 +42,8 @@ app.use('/api/subadmin', subadminRoutes);
 
 // Use the chat routes
 app.use('/api', chatRoutes);
+
+app.use("/api/enrolments", enrolmentRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
