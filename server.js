@@ -9,6 +9,8 @@ const adminRoutes = require('./routes/adminRoutes');
 const subadminRoutes = require('./routes/subadminRoutes');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const chatRoutes = require('./routes/chatRoutes');
+const errorHandler = require('./middlewares/errorHandler');
 
 // Load environment variables
 dotenv.config();
@@ -37,6 +39,12 @@ app.use('/api/tutor', tutorRoutes);
 app.use('/api/parent', parentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/subadmin', subadminRoutes);
+
+// Use the chat routes
+app.use('/api', chatRoutes);
+
+// Error handling middleware
+app.use(errorHandler);
 
 // Start server
 const PORT = process.env.PORT || 5000;
