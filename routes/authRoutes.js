@@ -1,6 +1,6 @@
 const express = require('express');
 const { signupUser, loginUser, logOutUser } = require('../controllers/authController');
-const { protect } = require('../middlewares/authMiddleware');
+const { Authprotect } = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ router.post('/login', loginUser);
 router.post('/logout', logOutUser);
 
 // Example protected route
-router.get('/profile', protect, (req, res) => {
+router.get('/profile', Authprotect, (req, res) => {
   res.status(200).json({ message: `Welcome, ${req.user.username}!` });
 });
 

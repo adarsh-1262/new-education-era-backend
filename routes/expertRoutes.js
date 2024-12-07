@@ -1,14 +1,20 @@
 const express = require('express');
 
 const { protect } = require('../middlewares/expertMiddleware');
-const {signupExpert, loginExpert, logOutExpert} = require('../controllers/expertController');
+const {signupExpert, loginExpert, logOutExpert, getAllExperts} = require('../controllers/expertController');
+const upload = require('../middlewares/multer');
+const { bookExpert } = require('../controllers/expertBookingController');
+const { Authprotect } = require('../middlewares/authMiddleware');
+
 
 const router = express.Router();
 
 // Routes
-router.post('/signup', signupExpert);
+router.post('/signup', upload.single('profilePicture'), signupExpert);
 router.post('/login', loginExpert);
 router.post('/logout', logOutExpert);
+router.get('/get_experts', getAllExperts)
+router.post('/bookExpert',Authprotect , bookExpert)
 
 // Example protected route
 router.get('/profile', protect, (req, res) => {

@@ -1,4 +1,5 @@
 const Expert = require('../models/Expert');
+const uploadOnCLoudinary = require('../utils/cloudinary');
 const generateToken = require('../utils/generateToken');
 
 // Signup user
@@ -11,21 +12,46 @@ const signupExpert = async (req, res) => {
     phone,
     consultationField,
     experienceYears,
+    description
   } = req.body;
 
   // Input validation
-  if (!username || !email || !password || !userType || !phone || !consultationField || !experienceYears) {
+  if (!username || !email || !password || !userType || !phone || !consultationField || !experienceYears || !description) {
     return res.status(400).json({ success: false, message: 'All fields are required!' });
   }
 
   try {
+    console.log("file info ",req.file)
+    if (!req.file) {
+      return res.status(400).json({ message: "File upload failed. Please try again." });
+    }
+
     // Check if user already exists
     const existingUser = await Expert.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
       return res.status(400).json({ success: false, message: 'User already exists!' });
     }
+
+    const profilePath = req.file?.path
+    if (!profilePath) {
+      return res.status(400).json({ message: "File upload failed. Please try again." });
+    }
+
+    const profile = await uploadOnCLoudinary(profilePath)
+    console.log("uploaded file info ",profile.url)
+
     // Create new expert
-    const expert = await Expert.create({ username, email, password, userType, phone, consultationField, experienceYears });
+    const expert = await Expert.create({ 
+      username, 
+      email, 
+      password, 
+      userType, 
+      phone, 
+      consultationField, 
+      experienceYears, 
+      profilePicture: profile.url,
+      description
+    });
 
     res.status(201).json({
       success: true,
@@ -33,6 +59,7 @@ const signupExpert = async (req, res) => {
       token: generateToken(expert._id), // Generate and return token
     });
   } catch (error) {
+    console.log("error while signup ",error)
     res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 };
@@ -92,4 +119,14 @@ const logOutExpert = async(req, res) => {
 
 }
 
-module.exports = { signupExpert, loginExpert, logOutExpert };
+// get all the experts
+const getAllExperts = async (req, res) => {
+  try {
+    const experts = await Expert.find({})
+    res.status(200).json({ success: true, data: experts })
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error. Please try again.' });
+  }
+}
+
+module.exports = { signupExpert, loginExpert, logOutExpert, getAllExperts };
