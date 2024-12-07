@@ -46,7 +46,7 @@ const bookExpert = async(req, res) => {
         Best regards,  
         EduHub`;
 
-        const booked = await ConsultationBooking.findOne({ $or: [{ date }, { time }] })
+        const booked = await ConsultationBooking.findOne({ $and: [{ date }, { time }] })
         if(booked) {
             return res.status(404).json({
                 success: false,
