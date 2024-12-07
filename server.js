@@ -28,6 +28,8 @@ app.use(cors(corsOptions));
 app.options('*', cors(corsOptions))
 
 app.use(express.json()); // Middleware to parse JSON
+app.use(express.urlencoded({extended: true}))
+app.use(express.static("public"))
 app.use(cookieParser())
 
 // Routes
