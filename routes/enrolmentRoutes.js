@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
     const enrolment = new Enrolment({ studentName, parentName, email, phone, selectedClass });
     await enrolment.save();
 
-    res.json({ message: "Enrolment successful!" });
+    res.json({ message: "Enrollment successful!" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -12,6 +12,9 @@ const cookieParser = require('cookie-parser');
 const chatRoutes = require('./routes/chatRoutes');
 const errorHandler = require('./middlewares/errorHandler');
 const enrolmentRoutes = require("./routes/enrolmentRoutes");
+const scheduleRoutes = require("./routes/scheduleRoutes");
+const progressRoutes = require("./routes/progressRoutes");
+const courseRoutes = require("./routes/courseRoutes");
 
 
 
@@ -44,6 +47,9 @@ app.use('/api/subadmin', subadminRoutes);
 app.use('/api', chatRoutes);
 
 app.use("/api/enrolments", enrolmentRoutes);
+app.use("/api/schedules", scheduleRoutes);
+app.use("/api/progress", progressRoutes);
+app.use("/api/courses", courseRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
