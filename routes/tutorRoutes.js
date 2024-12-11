@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { protect } = require('../middlewares/tutorMiddleware');
-const { signupTutor, loginTutor, logOutTutor, getAllTutors, bookTutor } = require('../controllers/tutorController');
+const { signupTutor, loginTutor, logOutTutor, getAllTutors, bookTutor, getAllTutorBookings } = require('../controllers/tutorController');
 const upload = require('../middlewares/multer');
 const { Authprotect } = require('../middlewares/authMiddleware');
 
@@ -13,6 +13,7 @@ router.post('/login', loginTutor);
 router.post('/logout', logOutTutor);
 router.get('/getTutors', getAllTutors)
 router.post('/bookTutor', Authprotect, bookTutor)
+router.get('/getTutorBookings',getAllTutorBookings)
 
 
 // Example protected route

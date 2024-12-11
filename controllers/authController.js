@@ -96,4 +96,18 @@ const logOutUser = async(req, res) => {
 
 }
 
-module.exports = { signupUser, loginUser, logOutUser };
+const getRole = async(req, res) => {
+  try {
+    const user = req.user;
+    return res.status(200).json({
+      success: true,
+      role: user.userType,
+      message: "successfully get role"
+    })
+  } catch (error) {
+    console.log("error while getting role",error)
+    res.status(500).json({ success: false, message: 'Server error. Please try again.' });
+  }
+}
+
+module.exports = { signupUser, loginUser, logOutUser, getRole };
