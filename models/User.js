@@ -27,18 +27,6 @@ const UserSchema = new mongoose.Schema({
     school: {
         type: String,
         required: true,
-        enum: [
-            'Springfield High School', 
-            'Riverdale Academy', 
-            'Greenwood International', 
-            'Maple Leaf School', 
-            'Harmony Public School', 
-            'Evergreen Valley Academy', 
-            'Starlight High', 
-            'Bluebell International', 
-            'Hillcrest Academy', 
-            'Crescent Public School'
-        ] // Dummy list of school names
     },
     Class: {
         type: String,
@@ -62,6 +50,10 @@ const UserSchema = new mongoose.Schema({
         minlength: 10,
         maxlength: 10
     },
+    profilePicture: { 
+        type: String, 
+        required: true 
+      },
 });
 
 // Hash password before saving

@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const uploadOnCLoudinary = require('../utils/cloudinary');
 const generateToken = require('../utils/generateToken');
 
 // Signup user
@@ -20,6 +21,11 @@ const signupUser = async (req, res) => {
   }
 
   try {
+
+    if (!req.file) {
+      return res.status(400).json({ message: "File upload failed. Please try again." });
+    }
+
     // Check if user already exists
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
@@ -30,8 +36,15 @@ const signupUser = async (req, res) => {
       return res.status(400).json({ success: false, message: 'User is already with this Roll no in this class' });
     }
 
+    const profilePath = req.file?.path
+    if (!profilePath) {
+      return res.status(400).json({ message: "File upload failed. Please try again." });
+    }
+
+    const profile = await uploadOnCLoudinary(profilePath)
+
     // Create new user
-    const user = await User.create({ username, email, password, userType, school, Class, rollNo, phone });
+    const user = await User.create({ username, email, password, userType, school, Class, rollNo, phone, profilePicture: profile.url, });
 
     res.status(201).json({
       success: true,
