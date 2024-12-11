@@ -10,6 +10,7 @@ router.post('/signup', signupTutor);
 router.post('/login', loginTutor);
 router.post('/logout', logOutTutor);
 
+
 // Example protected route
 router.get('/profile', protect, (req, res) => {
   res.status(200).json({ message: `Welcome, ${req.user.username}!` });
