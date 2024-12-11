@@ -72,8 +72,8 @@ const loginUser = async (req, res) => {
       .cookie("token", generateToken(user._id), options)
       .json({
       success: true,
-      role: user.userType,
-      message: 'Login successful',
+      user,
+      message: 'Login student successful',
     });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error. Please try again.' });
