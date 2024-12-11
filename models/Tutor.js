@@ -37,6 +37,14 @@ const TutorSchema = new mongoose.Schema({
   experienceYears: {
     type: Number,
     required: true
+  },
+  profilePicture: { 
+    type: String, 
+    required: true 
+  },
+  totalBookings: {
+    type: Array,
+    required: true
   }
 });
 
