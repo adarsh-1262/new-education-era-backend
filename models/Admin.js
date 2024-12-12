@@ -50,6 +50,10 @@ const AdminSchema = new mongoose.Schema({
         'Crescent Public School'
     ] // Dummy list of school names
   },
+  profilePicture: { 
+    type: String, 
+    required: true 
+  },
 });
 
 // Hash password before saving

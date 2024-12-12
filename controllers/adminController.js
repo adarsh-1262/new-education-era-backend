@@ -1,4 +1,5 @@
 const Admin = require('../models/Admin');
+const uploadOnCLoudinary = require('../utils/cloudinary');
 const generateToken = require('../utils/generateToken');
 
 // Signup user
@@ -19,14 +20,25 @@ const signupAdmin = async (req, res) => {
   }
 
   try {
+    
+    if (!req.file) {
+      return res.status(400).json({ message: "File upload failed. Please try again." });
+    }
     // Check if user already exists
     const existingUser = await Admin.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
       return res.status(400).json({ success: false, message: 'User already exists!' });
     }
 
+    const profilePath = req.file?.path
+    if (!profilePath) {
+      return res.status(400).json({ message: "File upload failed. Please try again." });
+    }
+
+    const profile = await uploadOnCLoudinary(profilePath)
+
     // Create new Admin
-    const admin = await Admin.create({ name, username, email, password, userType, school, phone });
+    const admin = await Admin.create({ name, username, email, password, userType, school, phone, profilePicture: profile.url, });
 
     res.status(201).json({
       success: true,

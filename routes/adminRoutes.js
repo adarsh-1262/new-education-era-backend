@@ -1,11 +1,12 @@
 const express = require('express');
 const { protect } = require('../middlewares/adminMiddleware');
 const { signupAdmin, loginAdmin, logOutAdmin } = require('../controllers/adminController');
+const upload = require('../middlewares/multer');
 
 const router = express.Router();
 
 // Routes
-router.post('/signup', signupAdmin);
+router.post('/signup', upload.single('profilePicture'), signupAdmin);
 router.post('/login', loginAdmin);
 router.post('/logout', logOutAdmin);
 

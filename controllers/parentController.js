@@ -1,5 +1,6 @@
 const Parent = require('../models/Parent');
 const generateToken = require('../utils/generateToken');
+const uploadOnCLoudinary = require('../utils/cloudinary');
 
 // Signup user
 const signupParent = async (req, res) => {
@@ -20,6 +21,10 @@ const signupParent = async (req, res) => {
   }
 
   try {
+    console.count("aaya")
+    if (!req.file) {
+      return res.status(400).json({ message: "File upload failed. Please try again." });
+    }
     // Check if user already exists
     const existingUser = await Parent.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
@@ -29,16 +34,24 @@ const signupParent = async (req, res) => {
     if (existingclassOrRollno) {
       return res.status(400).json({ success: false, message: 'User is already with this Roll no in this class' });
     }
-
+    console.count("aaya")
+    const profilePath = req.file?.path
+    if (!profilePath) {
+      return res.status(400).json({ message: "File upload failed. Please try again." });
+    }
+    console.count("aaya")
+    const profile = await uploadOnCLoudinary(profilePath)
+    console.count("aaya")
     // Create new user
-    const parent = await Parent.create({ username, email, password, userType, school, Class, rollNo, phone });
-
+    const parent = await Parent.create({ username, email, password, userType, school, Class, rollNo, phone, profilePicture: profile.url, });
+    console.count("aaya")
     res.status(201).json({
       success: true,
       message: 'Signup successful',
-      token: generateToken(user._id), // Generate and return token
+      token: generateToken(parent._id), // Generate and return token
     });
   } catch (error) {
+    console.log("error while sign up parent ",error)
     res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 };

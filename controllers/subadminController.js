@@ -1,5 +1,6 @@
 
 const Subadmin = require('../models/Subadmin');
+const uploadOnCLoudinary = require('../utils/cloudinary');
 const generateToken = require('../utils/generateToken');
 
 // Signup user
@@ -21,14 +22,27 @@ const signupSubadmin = async (req, res) => {
   }
 
   try {
+
+    if (!req.file) {
+      return res.status(400).json({ message: "File upload failed. Please try again." });
+    }
+
     // Check if user already exists
     const existingUser = await Subadmin.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
       return res.status(400).json({ success: false, message: 'User already exists!' });
     }
 
+    const profilePath = req.file?.path
+    if (!profilePath) {
+      return res.status(400).json({ message: "File upload failed. Please try again." });
+    }
+
+    const profile = await uploadOnCLoudinary(profilePath)
+
+
     // Create new Admin
-    const subadmin = await Subadmin.create({ name, username, email, password, userType, school, Class, phone });
+    const subadmin = await Subadmin.create({ name, username, email, password, userType, school, Class, phone, profilePicture: profile.url, });
 
     res.status(201).json({
       success: true,
@@ -36,6 +50,7 @@ const signupSubadmin = async (req, res) => {
       token: generateToken(subadmin._id), // Generate and return token
     });
   } catch (error) {
+    console.log("error while sign up sub admin ",error)
     res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 };

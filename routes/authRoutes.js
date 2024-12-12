@@ -1,11 +1,12 @@
 const express = require('express');
 const { signupUser, loginUser, logOutUser, getRole } = require('../controllers/authController');
 const { Authprotect } = require('../middlewares/authMiddleware');
+const upload = require('../middlewares/multer');
 
 const router = express.Router();
 
 // Routes
-router.post('/signup', signupUser);
+router.post('/signup', upload.single('profilePicture'),  signupUser);
 router.post('/login', loginUser);
 router.post('/logout', logOutUser);
 router.get('/getRole', Authprotect ,getRole)
