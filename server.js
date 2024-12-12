@@ -15,7 +15,7 @@ const enrolmentRoutes = require("./routes/enrolmentRoutes");
 const scheduleRoutes = require("./routes/scheduleRoutes");
 const progressRoutes = require("./routes/progressRoutes");
 const courseRoutes = require("./routes/courseRoutes");
-
+const complaintRoutes = require("./routes/complaintRoutes")
 
 
 // Connect to MongoDB
@@ -44,6 +44,7 @@ app.use('/api/tutor', tutorRoutes);
 app.use('/api/parent', parentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/subadmin', subadminRoutes);
+app.use('/api/complaint', complaintRoutes)
 
 // Use the chat routes
 app.use('/api', chatRoutes);
