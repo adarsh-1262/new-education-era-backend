@@ -109,5 +109,23 @@ const getRole = async(req, res) => {
     res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 }
+const studentData = async (req, res) => {
+  try {    
+    // Respond with the student data
+    return res.status(200).json({
+      success: true,
+      data: req.user,
+    });
+    
+  } catch (error) {
+    console.error('Error while getting studentData:', error);
 
-module.exports = { signupUser, loginUser, logOutUser, getRole };
+    // Handle server errors
+    res.status(500).json({
+      success: false,
+      message: 'Server error. Please try again.',
+    });
+  }
+};
+
+module.exports = { signupUser, loginUser, logOutUser, getRole, studentData };
