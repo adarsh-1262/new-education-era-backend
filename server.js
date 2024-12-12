@@ -15,6 +15,8 @@ const enrolmentRoutes = require("./routes/enrolmentRoutes");
 const scheduleRoutes = require("./routes/scheduleRoutes");
 const progressRoutes = require("./routes/progressRoutes");
 const courseRoutes = require("./routes/courseRoutes");
+const studentRoutes = require("./routes/studentRoutes");
+const attendanceRoutes = require("./routes/attendanceRoutes");
 
 
 
@@ -52,6 +54,9 @@ app.use("/api/enrolments", enrolmentRoutes);
 app.use("/api/schedules", scheduleRoutes);
 app.use("/api/progress", progressRoutes);
 app.use("/api/courses", courseRoutes);
+
+app.use("/api/students", studentRoutes);
+app.use("/api/attendance", attendanceRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
