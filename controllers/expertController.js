@@ -1,3 +1,4 @@
+const ConsultationBooking = require('../models/ConsultationBooking');
 const Expert = require('../models/Expert');
 const uploadOnCLoudinary = require('../utils/cloudinary');
 const generateToken = require('../utils/generateToken');
@@ -129,4 +130,14 @@ const getAllExperts = async (req, res) => {
   }
 }
 
-module.exports = { signupExpert, loginExpert, logOutExpert, getAllExperts };
+// get expert bookigns
+const getAllExpertBookings = async (req, res) => {
+  try {
+    const expertBookings = await ConsultationBooking.find({})
+    res.status(200).json({ success: true, data: expertBookings, user: req.user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error. Please try again.' });
+  }
+}
+
+module.exports = { signupExpert, loginExpert, logOutExpert, getAllExperts, getAllExpertBookings };

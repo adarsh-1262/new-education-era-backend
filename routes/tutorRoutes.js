@@ -1,7 +1,7 @@
 const express = require('express');
 
-const { protect } = require('../middlewares/tutorMiddleware');
-const { signupTutor, loginTutor, logOutTutor, getAllTutors, bookTutor } = require('../controllers/tutorController');
+const { Tutorprotect } = require('../middlewares/tutorMiddleware');
+const { signupTutor, loginTutor, logOutTutor, getAllTutors, bookTutor, getAllTutorBookings } = require('../controllers/tutorController');
 const upload = require('../middlewares/multer');
 const { Authprotect } = require('../middlewares/authMiddleware');
 
@@ -13,9 +13,11 @@ router.post('/login', loginTutor);
 router.post('/logout', logOutTutor);
 router.get('/getTutors', getAllTutors)
 router.post('/bookTutor', Authprotect, bookTutor)
+router.get('/getTutorBookings',Tutorprotect, getAllTutorBookings)
+
 
 // Example protected route
-router.get('/profile', protect, (req, res) => {
+router.get('/profile', Tutorprotect, (req, res) => {
   res.status(200).json({ message: `Welcome, ${req.user.username}!` });
 });
 
