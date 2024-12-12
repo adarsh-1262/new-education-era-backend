@@ -199,7 +199,7 @@ const bookTutor = async (req, res) => {
 const getAllTutorBookings = async (req, res) => {
   try {
     const expertBookings = await ConsultationBooking.find({})
-    res.status(200).json({ success: true, data: expertBookings })
+    res.status(200).json({ success: true, data: expertBookings, user: req.user })
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
